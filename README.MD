@@ -1,19 +1,19 @@
-### About
+## About
 Debugging WordPress can sometimes be a pain, our goal is to make it easy, which is why Loginator was built with this in mind. From creating a log folder to securing it from prying eyes, Loginator is here to save you time and resources, so you can focus on creating astonishing applications. Once activated, Loginator essentially becomes a core part of WordPress, which is why we disable deactivation as it is highly recommended to not uninstall Loginator until you have removed all references to the `loginator` function inside your WordPress installation.
 
 ## Demo
 [![YouTube Video](https://img.youtube.com/vi/k1o4zZC6dzs/maxresdefault.jpg)](https://youtu.be/k1o4zZC6dzs)
 
-### Update
+## Update
 2.0 has been released with backwards compatibility with 1.0. Your `loginator` function calls will still work so you can continue to use it, or our new static methods.
 
-### Functional Example
+## Functional Example
 
 ```php
 loginator('Logging this message', array('flag' => 'd', 'id' => '', 'file' => 'logger', 'pipedream' => 'https://your-id-here.m.pipedream.net'));
 ```
 
-### Static Method Examples
+## Static Method Examples
 
 ```php
 Loginator::emergency('log data here'); // Email triggers to site admin or configured emails
@@ -40,7 +40,7 @@ $args = array(
 Loginator::info('log data here', $args);
 ```
 
-### Features
+## Features
 
 - Global Enable/Disable
 - Flags for Errors, Debug, and Info
@@ -64,8 +64,8 @@ Either rename or remove the Loginator plugin from `/wp-content/plugins/`
 
 ## Screenshots
 
-1. Settings
-2. IDE
+![Settings](.wordpress-org/screenshot-1.jpg)
+![IDE](.wordpress-org/screenshot-2.jpg)
 
 ## Changelog
 
