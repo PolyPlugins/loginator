@@ -1,10 +1,10 @@
 === Loginator ===
 Contributors: polyplugins
-Tags: log, debug, logger, error, error handling, developer, dev, dev tool, developer tool
+Tags: debug, logger, error, developer, developer tool
 Requires at least: 4.0
-Tested up to: 5.9
+Tested up to: 6.7
 Requires PHP: 5.4
-Stable tag: 1.0.1
+Stable tag: 2.0.1
 License: GPL3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,13 +13,42 @@ Adds a simple global function for logging to files for developers.
 == Description ==
 [youtube https://youtu.be/k1o4zZC6dzs]
 
-**Update**
-Those installing for the first time should check out [Loginator v2.0](https://github.com/PolyPlugins/Loginator "Poly Plugins") instead as this will be where this plugin is going. If you are currently using v1 we are going to work towards a compatibility upgrade as the function was replaced by static methods and would need all references to the old function updated. We also have added premium features in 2.0 to better help developers moving forward.
-
 **About**
 Debugging WordPress can sometimes be a pain, our goal is to make it easy, which is why Loginator was built with this in mind. From creating a log folder, to securing it from prying eyes, Loginator is here to save you time and resources, so you can focus on creating astonishing applications. Once activated, Loginator essentially becomes a core part of WordPress, which is why we disable deactivation as it is highly recommended to not uninstall Loginator until you have removed all references to the loginator function inside your WordPress installation.
 
-Free Features:
+**Update**
+2.0 has been released with backwards compatibility with 1.0. Your loginator function calls will still work so you can continue to use it, or our new static methods.
+
+**Functional Example**
+
+`loginator('Logging this message', array('flag => 'd', 'id' => '', 'file' => 'logger', 'pipedream' => 'https://your-id-here.m.pipedream.net'));`
+
+**Static Method Examples**
+
+`Loginator::emergency('log data here'); // Email triggers to site admin or configured emails
+Loginator::alert('log data here');
+Loginator::critical('log data here'); // Email triggers to site admin or configured emails
+Loginator::error('log data here');
+Loginator::warning('log data here');
+Loginator::notice('log data here');
+Loginator::info('log data here');
+Loginator::debug('log data here'); // PipeDream flag is set to true by default
+Loginator::success('log data here');
+`
+
+You can also pass arguments
+
+`$args = array(
+  'flag'      => 'd',
+  'id'        => 23,
+  'file'      => 'test',
+  'pipedream' => false,
+);
+
+Loginator::info('log data here', $args);
+`
+
+Features:
 
 * Global Enable/Disable
 * Flags for Errors, Debug, and Info
@@ -27,9 +56,6 @@ Free Features:
 Our beautiful comments follow WordPress Developer Standards, that when paired with Visual Studio Code or other supporting IDE\'s will elaborately explain how to use the loginator function
 * Auto detect if data being logged is an array and pretty prints it to the file
 * Disable Loginator deactivation to prevent function not existing errors
-
-[Donate Features](https://www.polyplugins.com/product/loginator/ "Poly Plugins"):
-
 * Email on CRITICAL flag
 * Pipe Dream logging
 
@@ -47,6 +73,14 @@ Either rename or remove the Loginator plugin from `/wp-content/plugins/`
 2. IDE
 
 == Changelog ==
+= 2.0.1 =
+
+* Added: Emergency, alert, critical, error, warning, notice, info, debug, and success static methods
+* Added: Email on CRITICAL flag
+* Added: Pipe Dream logging
+* Added: Backwards compatibility with loginator function
+* Integrated: [Reusable Admin Panel](https://wordpress.org/plugins/reusable-admin-panel/)
+
 = 1.0.1 =
 
 * Bugfix: Added object handling to log the accessible non-static properties.
