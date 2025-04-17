@@ -4,7 +4,7 @@
  * Plugin Name: Loginator
  * Plugin URI: https://wordpress.org/plugins/loginator/
  * Description: Adds a simple global function for logging to files for developers. 
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Poly Plugins
  * Author URI: https://www.polyplugins.com
  * License: GPL3
@@ -19,11 +19,13 @@ define('LOGINATOR_BASENAME', plugin_basename(LOGINATOR_PLUGIN));
 // Activation Checks
 function loginator_activation()
 {
+  add_option('loginator_version', '1.0.1');
   add_option('loginator_enabled', 1);
   $dir_logs = ABSPATH . '/wp-logs';
   $index = $dir_logs . '/index.php';
   $htaccess = $dir_logs . '/.htaccess';
-  // Check if directory or a file with directory name exists
+
+  // Check if logs directory exists
   if (!file_exists($dir_logs)) {
     // Make the directory, allow writing so we can add a file
     mkdir($dir_logs, 0755, true);
@@ -70,12 +72,19 @@ function loginator($log, $flag = 'd', $file = '', $id = '')
 {
   // Log if enabled
   if (get_option('loginator_enabled')) {
-    // Sanitize vars
-    $log  = (is_array($log)) ? array_map('esc_attr', $log) : sanitize_text_field($log);
+    // Sanitize
+    if (is_object($log)) {
+      $log = get_object_vars($log);
+      $log = array_map('esc_attr', $log);
+      $log = (object) $log;
+    } else {
+      $log  = (is_array($log)) ? array_map('esc_attr', $log) : sanitize_textarea_field($log);
+    }
     $file = sanitize_file_name($file);
     $flag = sanitize_text_field($flag);
     $id   = ($id) ? '-' . sanitize_text_field($id) : '';
 
+    // Flag Handling
     switch ($flag) {
       case "c":
         $flag = "CRITICAL";
@@ -91,12 +100,14 @@ function loginator($log, $flag = 'd', $file = '', $id = '')
         break;
     }
 
+    // Use flag if file empty
     if (empty($file)) {
       $file = strtolower($flag);
     }
 
+    // Save logs
     $dir = ABSPATH . '/wp-logs';
-    if (is_array($log)) {
+    if (is_object($log) || is_array($log)) {
       file_put_contents($dir . '/' . $file . $id . '.log', $flag . ' ' . date('m-d-y h:i:s') . ': ' . print_r($log, true) . PHP_EOL, FILE_APPEND);
     } else {
       file_put_contents($dir . '/' . $file . $id . '.log', $flag . ' ' . date('m-d-y h:i:s') . ': ' . $log . PHP_EOL, FILE_APPEND);
@@ -133,7 +144,6 @@ function loginator_settings_page()
 // Register fields
 function loginator_register_fields()
 {
-
   // Define args for saving the settings, using this for sanitize callback.
   $checked = array(
     'type' => 'boolean',
@@ -143,9 +153,9 @@ function loginator_register_fields()
 
   // Add Section
   add_settings_section('loginator-general-settings', 'General Settings', null, 'loginator');
-  // Display General Settings
+  // Display Enabled Settings
   add_settings_field('loginator_enabled', 'Enabled', 'loginator_enabled_setting', 'loginator', 'loginator-general-settings');
-  // Save General Settings
+  // Save Enabled Settings
   register_setting('loginator-general-settings', 'loginator_enabled', $checked);
 }
 add_action('admin_init', 'loginator_register_fields');
